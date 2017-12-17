@@ -1,154 +1,216 @@
+#include "stdafx.h"
 #include <iostream>
 using namespace std;
+void input_mas(unsigned int  mas[4][4]) {
 
-int main()
-{
-	
-	int matrix[4][4], i = 0, j = 0, k = 0;
-	char sdvig;
-
-	for (i = 0; i<4; ++i) {
-		for (j = 0; j<4; ++j) {
-			cin >> matrix[i][j];
+	for (unsigned int i=0; i < 4; i++) {
+		for (unsigned int j=0; j < 4; j++) {
+			cin >> mas[i][j];
 		}
 	}
-	
-	for (i = 0; i<4; ++i) {
-		for (j = 0; j<4; ++j) {
-			if (matrix[i][j] == 0) {
+}
+void output_mas(unsigned int mas[4][4]) {
+	cout << endl;
+	for (unsigned int i = 0; i<4; ++i) {
+		for (unsigned int j = 0; j<4; ++j) {
+			if (mas[i][j] == 0) {
 				cout << '*' << ' ';
 			}
 			else {
-				cout << matrix[i][j] << " ";
+				cout << mas[i][j] << " ";
 			}
 		}
 		cout << endl;
 	}
-	while (cin >> sdvig) {
-		if (sdvig == 'q') {                                   // q - выход
-			break;
+}
+
+void sdvig_vniz(unsigned int mas[4][4]) {
+	{
+		for (unsigned int j = 0; j < 4; j++) {
+			for (unsigned int i = 3; i > 0; i--)
+				if (mas[i][j] == 0) {
+					for (int k = i - 1; k > -1; k--) {
+						if (mas[k][j] != 0) {
+							mas[i][j] = mas[k][j];
+							mas[k][j] = 0;
+						}
+					}
+				}
 		}
-    
-		if (sdvig == 'j') {                                   //j - сдвинуть вниз
-			for (j = 0; j<4; ++j) {
-				for (i = 3; i >= 0; --i) {
-					if (matrix[i][j] != 0) {
-						for (k = i - 1; k >= 0; --k) {
-							if (matrix[k][j] != 0) {
-								if (matrix[k][j] == matrix[i][j]) {
-									matrix[i][j] = matrix[i][j] + matrix[k][j];
-									matrix[k][j] = 0;
-								}
-								break;
-							}
+		for (unsigned int j = 0; j < 4; j++) {
+			for (unsigned int i = 3; i > 0; i--) {
+				if (mas[i][j] == mas[i - 1][j]) {
+					mas[i][j] += mas[i - 1][j];
+					mas[i - 1][j] = 0;
+				}
+			}
+		}
+		for (unsigned int j = 0; j < 4; j++) {
+			for (unsigned int i = 3; i > 0; i--) {
+				if (mas[i][j] == 0) {
+					for ( int k = i - 1; k > -1; k--) {
+						if (mas[k][j] != 0) {
+							mas[i][j] = mas[k][j];
+							mas[k][j] = 0;
+							break;
 						}
-						while (matrix[i + 1][j] == 0) {
-							if (i<3) {
-								matrix[i + 1][j] = matrix[i][j];
-								matrix[i][j] = 0;
-								i = i + 1;
-							}
-							else { break; }
-						}
-						i = k;
 					}
 				}
 			}
 		}
-    
-		if (sdvig == 'k') {                                    // k - сдвинуть наверх
-			for (j = 0; j<4; ++j) {
-				for (i = 0; i<4; ++i) {
-					if (matrix[i][j] != 0) {
-						for (k = i + 1; k<4; ++k) {
-							if (matrix[k][j] != 0) {
-								if (matrix[k][j] == matrix[i][j]) {
-									matrix[i][j] = matrix[i][j] + matrix[k][j];
-									matrix[k][j] = 0;
-								}
-								break;
-							}
-						}
-						while (matrix[i - 1][j] == 0) {
-							if (i>0) {
-								matrix[i - 1][j] = matrix[i][j];
-								matrix[i][j] = 0;
-								i = i - 1;
-							}
-							else { break; }
-						}
-						i = k;
+	}
+}
+void sdvig_vverh(unsigned int mas[4][4]) {
+	for (unsigned int j = 0; j < 4; j++) {
+		for (unsigned int i = 0; i < 4; i++) {
+			if (mas[i][j] == 0) {
+				for ( unsigned int k = i + 1; k < 4; k++) {
+					if (mas[k][j] != 0) {
+						mas[i][j] = mas[k][j];
+						mas[k][j] = 0;
+						break;
 					}
 				}
 			}
 		}
-    
-		if (sdvig == 'h') {                                      //h - сдвинуть влево
-			for (i = 0; i<4; ++i) {
-				for (j = 0; j<4; ++j) {
-					if (matrix[i][j] != 0) {
-						for (k = j + 1; k<4; ++k) {
-							if (matrix[i][k] != 0) {
-								if (matrix[i][k] == matrix[i][j]) {
-									matrix[i][j] = matrix[i][j] + matrix[i][k];
-									matrix[i][k] = 0;
-								}
-								break;
-							}
-						}
-						while (matrix[i][j - 1] == 0) {
-							if (j>0) {
-								matrix[i][j - 1] = matrix[i][j];
-								matrix[i][j] = 0;
-								j = j - 1;
-							}
-							else { break; }
-						}
-						j = k;
+	}
+	for (unsigned int j = 0; j<4; j++) {
+		for (unsigned int i = 0; i<4; i++) {
+			if (mas[i][j] == mas[i + 1][j]) {
+				mas[i][j] += mas[i + 1][j];  
+				mas[i + 1][j] = 0;           
+			}
+		}
+	}
+	for (unsigned int j = 0; j<4; j++) {
+		for (unsigned int i = 0; i < 4; i++) {
+			if (mas[i][j] == 0) {
+				for (unsigned int  k = i + 1; k < 4; k++) {
+					if (mas[k][j] != 0) {
+						mas[i][j] = mas[k][j];
+						mas[k][j] = 0;
+						break;
 					}
 				}
 			}
-		}
-    
-		if (sdvig == 'l') {                                 //l - сдвинуть вправо
-			for (i = 0; i<4; ++i) {
-				for (j = 3; j >= 0; --j) {
-					if (matrix[i][j] != 0) {
-						for (k = j - 1; k >= 0; --k) {
-							if (matrix[i][k] != 0) {
-								if (matrix[i][k] == matrix[i][j]) {
-									matrix[i][j] = matrix[i][j] + matrix[i][k];
-									matrix[i][k] = 0;
-								}
-								break;
-							}
-						}
-						while (matrix[i][j + 1] == 0) {
-							if (j<3) {
-								matrix[i][j + 1] = matrix[i][j];
-								matrix[i][j] = 0;
-								j = j + 1;
-							}
-							else { break; }
-						}
-						j = k;
-					}
-				}
-			}
-		}
-    
-		for (i = 0; i<4; ++i) {
-			for (j = 0; j<4; ++j) {
-				if (matrix[i][j] == 0) {
-					cout << '*' << ' ';
-				}
-				else {
-					cout << matrix[i][j] << " ";
-				}
-			}
-			cout << endl;
 		}
 	}
 }
 
+void sdvig_vlevo(unsigned int mas[4][4]) {
+	for (unsigned int i = 0; i < 4; i++) {
+		for (unsigned int j = 0; j < 3; j++) {
+			if (mas[i][j] == 0) {
+				for (unsigned int k = j + 1; k <= 3; k++) {
+					if (mas[i][k] != 0) {
+						mas[i][j] = mas[i][k];
+						mas[i][k] = 0;
+						break;
+					}
+				}
+			}
+		}
+	}
 
+	for (unsigned int i = 0; i<4; i++) {
+		for (unsigned int j = 0; j<3; j++)
+			if (mas[i][j] == mas[i][j + 1]) {
+				mas[i][j] += mas[i][j + 1];
+				mas[i][j + 1] = 0;
+			}
+	}
+
+	for (unsigned int i = 0; i<4; i++) {
+		for (unsigned int j = 0; j<3; j++)
+			if (mas[i][j] == 0) {
+				for (unsigned int  k = j + 1; k <= 3; k++) {
+					if (mas[i][k] != 0) {
+						mas[i][j] = mas[i][k];
+						mas[i][k] = 0;
+						break;
+					}
+				}
+			}
+	}
+}
+
+void sdvig_vpravo(unsigned int mas[4][4]) {
+	for (unsigned int i = 0; i<4; i++) {
+		for (unsigned int j = 3; j>0; j--)
+			if (mas[i][j] == 0) {
+				for (unsigned int k = j - 1; k >= 0; k--) {
+					if (mas[i][k] != 0) {
+						mas[i][j] = mas[i][k];
+						mas[i][k] = 0;
+						break;
+					}
+				}
+			}
+	}
+
+	for (unsigned int i = 0; i<4; i++) {
+		for (unsigned int j = 3; j>0; j--)
+			if (mas[i][j] == mas[i][j - 1]) {
+				mas[i][j] += mas[i][j - 1];
+				mas[i][j - 1] = 0;
+			}
+	}
+
+	for (unsigned int i = 0; i<4; i++) {
+		for (unsigned int j = 3; j>0; j--)
+			if (mas[i][j] == 0) {
+				for (int k = j - 1; k >= 0; k--) {
+					if (mas[i][k] != 0) {
+						mas[i][j] = mas[i][k];
+						mas[i][k] = 0;
+						break;
+					}
+				}
+			}
+	}
+}
+
+int main()
+{
+	unsigned int mas[4][4];
+	int ex;
+	input_mas(mas);
+	output_mas(mas);
+	char op;
+	while (cin>>op ) {
+		switch (op) {
+			case 'j': {
+				sdvig_vniz(mas);
+				output_mas(mas);
+				break;
+			}
+			case 'k': {
+				sdvig_vverh(mas);
+				output_mas(mas);
+				break;
+			}
+			case 'h': {
+				sdvig_vlevo(mas);
+				output_mas(mas);
+				break;
+			}
+			case 'l': {
+				sdvig_vpravo(mas);
+				output_mas(mas);
+				break;
+			}
+			case 'q': {
+				break;
+			}
+			default: {
+				cout << " Nepravelney simvol" << endl; break;
+			}
+
+		}
+	}
+	if (op == 'q') {
+		return -1;
+
+	}
+    return 0;
+}
